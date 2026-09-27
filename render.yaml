@@ -1,0 +1,21 @@
+# Render blueprint. The Dockerfile at repo root is used as-is; Render injects
+# $PORT, which the Dockerfile's CMD already honours.
+services:
+  - type: web
+    name: vera-bot
+    runtime: docker
+    plan: free
+    region: singapore          # closest to an India-run judge harness
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /v1/healthz
+    envVars:
+      # Local file, not a hosted DB: testing brief §11 forbids merchant/customer
+      # payload leaving the test environment.
+      - key: VERA_DB
+        value: /tmp/vera_state.db
+      - key: VERA_USE_LLM
+        value: "0"
+      - key: VERA_TEAM_NAME
+        value: Niyati
+      - key: VERA_CONTACT_EMAIL
+        value: niyati.swaroop@gmail.com

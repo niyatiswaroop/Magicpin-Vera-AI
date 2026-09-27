@@ -23,7 +23,40 @@ Serverless platforms that scale to zero (Vercel, Netlify, default Cloud Run) are
 
 ---
 
-## Option A — Hugging Face Spaces (recommended: no card, no sleep during a test)
+## Option A — Render (recommended: free web service, no card)
+
+Docker Spaces on Hugging Face became paid-only, so the free path there (Static)
+cannot run a server. Render's free web service still can.
+
+1. Push this repo to GitHub.
+2. render.com → sign up with GitHub → **New +** → **Web Service** → pick the repo.
+3. Render detects `Dockerfile` and `render.yaml`. Confirm **Instance Type: Free**.
+4. Deploy. The URL is `https://vera-bot.onrender.com` (or whatever name it assigns).
+5. Verify:
+
+   ```bash
+   BOT_URL=https://<your-service>.onrender.com python verify_deploy.py
+   ```
+
+**The one caveat**: free services spin down after ~15 minutes idle and cold start
+takes roughly a minute, which exceeds the judge's 30s timeout. During the test
+window the judge polls `/healthz` every 60s, so it will not sleep mid-test — the
+exposure is the first probe if the service happens to be asleep when the window
+opens. Two mitigations, use either:
+
+- Hit `/v1/healthz` yourself a few minutes before the slot to wake it.
+- Point a free uptime pinger (UptimeRobot, cron-job.org) at `/v1/healthz` every
+  5-10 minutes. It touches only the health endpoint, so no payload data leaves
+  the environment and §11 still holds.
+
+## Option A2 — Hugging Face Spaces (NO LONGER FREE)
+
+Docker and Gradio Spaces now require a paid PRO plan; only Static Spaces are
+free, and those serve static files with no server process. The assembled folder
+at `deploy/hf-space/` is kept in case you ever have a PRO account, but it is not
+a free option today.
+
+### (former Option A)
 
 1. Create an account at huggingface.co, then **New Space** → SDK **Docker** →
    visibility **Public** (the judge must reach it) → name it e.g. `vera-bot`.
