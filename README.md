@@ -44,10 +44,20 @@ uvicorn bot:app --host 0.0.0.0 --port 8080
 
 python test_contract.py        # 57 HTTP-contract checks vs api-call-examples.md
 python test_conversations.py   # 39 multi-turn checks vs §12 + Phase 4 scenarios
+python test_adaptation.py      # 31 Phase 3 context-injection checks
+python verify_deploy.py        # 26 pre-flight checks against a deployed URL
 python eval_harness.py lint    # offline rubric proxies, zero cost
 python make_submission.py      # regenerate submission.jsonl
 ```
 
 `compose(category, merchant, trigger, customer)` in `composer.py` is standalone and importable — no server needed.
+
+**Adaptation (§4 Phase 3).** Context is versioned and replaced atomically, and
+composition reads the live store on every tick, so an injected performance
+snapshot, a new digest item or a mid-test customer is picked up on the next send
+rather than serving a cached body. Verified by `test_adaptation.py`: new perf
+numbers appear and stale ones do not, an injected digest item is cited over the
+pre-existing one, a mid-test customer gets `send_as: merchant_on_behalf` with no
+merchant-side aggregates leaking into it, and out-of-order versions are rejected.
 
 **Files:** `bot.py` (5 endpoints + teardown) · `composer.py` (`compose`) · `conversation_handlers.py` (`respond`) · `facts.py` (provenance + validator) · `kinds.py` (31 specs) · `voice.py` (per-category voice) · `llm.py` (optional local model) · `store.py` (versioned context state)

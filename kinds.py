@@ -432,7 +432,8 @@ HOOKS: dict[str, str] = {
         "seasonal pattern[[, not a problem with your listing ({beat.note})]].",
     "perf_spike":
         "Your {trg.metric} are up {trg.delta_pct} week-on-week"
-        "[[ — likely your {trg.likely_driver}]].",
+        "[[ — now {perf.calls} calls off {perf.views} views]]"
+        "[[, likely your {trg.likely_driver}]].",
     "milestone_reached":
         "You're at {trg.value_now} {trg.metric}[[ — {trg.milestone_value} is the "
         "next visible mark]].",
