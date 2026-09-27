@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.pyc
+.llm_cache/
+.eval_state.json
+dataset/
+examples/
+*.md
+test_*.py
+eval_harness.py
+make_submission.py
+judge_simulator.py
+submission.jsonl
+vera_state.db*
+.git/

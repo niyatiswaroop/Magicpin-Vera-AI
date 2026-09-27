@@ -11,6 +11,30 @@
       },
       "total": 35.36666666666667,
       "n": 30
+    },
+    {
+      "at": "2026-09-27T13:57:46",
+      "means": {
+        "specificity": 7.166666666666667,
+        "category_fit": 7.133333333333334,
+        "merchant_fit": 8.1,
+        "decision_quality": 6.733333333333333,
+        "engagement_compulsion": 6.033333333333333
+      },
+      "total": 35.166666666666664,
+      "n": 30
+    },
+    {
+      "at": "2026-09-27T14:02:23",
+      "means": {
+        "specificity": 7.3,
+        "category_fit": 7.066666666666666,
+        "merchant_fit": 8.2,
+        "decision_quality": 6.866666666666666,
+        "engagement_compulsion": 6.133333333333334
+      },
+      "total": 35.56666666666667,
+      "n": 30
     }
   ]
 }

@@ -3,3 +3,7 @@ __pycache__/
 *.pyc
 .llm_cache/
 dataset/expanded/
+vera_state.db*
+deploy/hf-space/*.py
+deploy/hf-space/Dockerfile
+deploy/hf-space/requirements.txt

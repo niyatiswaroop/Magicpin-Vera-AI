@@ -418,9 +418,15 @@ def _relevance(
             if not (mine and peer):
                 continue
             try:
-                behind = float(mine.value) < float(peer.value)
+                mine_v, peer_v = float(mine.value), float(peer.value)
             except (TypeError, ValueError):
                 continue
+            # "3% against 3% for metro solo practices" says nothing. A benchmark
+            # only earns its sentence when there is a real gap, so a metric the
+            # merchant sits level on is skipped in favour of the next one.
+            if peer_v == 0 or abs(mine_v - peer_v) / abs(peer_v) < 0.08:
+                continue
+            behind = mine_v < peer_v
             cited.extend([mine, peer])
             fired.append(SOCIAL_PROOF)
             scope = (category.get("peer_stats") or {}).get("scope", "peers")
@@ -452,20 +458,33 @@ def _relevance(
                 fired.append(LOSS_AVERSION)
                 return f"{f.text} {phrase}.", cited, fired
 
-    # -- seasonal / event kinds: peer posting cadence is the natural proof ---
-    if SOCIAL_PROOF in spec.levers and spec.kind in (
+    # -- seasonal / event kinds ------------------------------------------
+    # A peer *cadence* average ("peers post every 7 days") was tried here and
+    # measured worse: it is a category-wide statistic, not a gap about this
+    # merchant, so it reads as filler. The brief's strong social-proof form is a
+    # peer *count* in the locality ("3 dentists near you did X"), which the
+    # dataset does not carry -- so instead the merchant's own demand is the
+    # anchor, which is concrete and about them.
+    if spec.kind in (
         "festival_upcoming", "category_seasonal", "ipl_match_today",
-        "category_trend_movement", "local_news_event",
+        "category_trend_movement", "local_news_event", "weather_heatwave",
     ):
-        cadence = fs.get("peer.post_freq")
-        if cadence:
-            cited.append(cadence)
-            fired.append(SOCIAL_PROOF)
-            scope = (category.get("peer_stats") or {}).get("scope", "peers")
-            scope_label = re.sub(r"[\s_]*(19|20)\d{2}$", "", str(scope)).replace("_", " ")
+        views = fs.get("perf.views")
+        offer, is_theirs = _preferred_offer(fs)
+        if views and offer and is_theirs:
+            cited.extend([views, offer])
+            fired.extend([SPECIFICITY, LOSS_AVERSION])
             return (
-                f"{scope_label.capitalize()} post every {cadence.text} days on "
-                f"average — the ones who post ahead of the date take the searches.",
+                f"{views.text} people looked you up last month and {offer.text} is "
+                f"all they saw — nothing tied to the date.",
+                cited, fired,
+            )
+        if views:
+            cited.append(views)
+            fired.extend([SPECIFICITY, LOSS_AVERSION])
+            return (
+                f"{views.text} people looked you up last month with nothing on your "
+                f"listing tied to the date.",
                 cited, fired,
             )
 
