@@ -25,6 +25,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+import conversation_handlers
 from composer import compose
 from conversation_handlers import respond
 from store import VALID_SCOPES, ContextStore, ConversationStore
@@ -289,6 +290,7 @@ async def reply(body: ReplyBody) -> dict[str, Any]:
 async def teardown() -> dict[str, Any]:
     n_ctx = contexts.wipe()
     n_conv = conversations.wipe()
+    conversation_handlers.reset()
     return {
         "ok": True,
         "wiped": {"contexts": n_ctx, "conversations": n_conv},

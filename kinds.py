@@ -233,7 +233,7 @@ SPECS: dict[str, KindSpec] = {
         why_now="a standing weekly question to you, not a nudge about your account",
         anchors=("perf.views", "offer.active", "catalog.first"),
         # This kind exists purely to fire the lever production Vera never fires.
-        levers=(ASK_MERCHANT, RECIPROCITY, CURIOSITY),
+        levers=(ASK_MERCHANT, RECIPROCITY, CURIOSITY, SPECIFICITY),
         cta="open_ended",
         offer_of_work="put whatever you say in front of the people already searching for it",
     ),
@@ -242,7 +242,7 @@ SPECS: dict[str, KindSpec] = {
         why_now="you asked for this and I have it ready",
         anchors=("trg.intent_topic", "offer.active", "catalog.first", "perf.views"),
         # The merchant already said yes -- never re-qualify (brief §9 Pattern D).
-        levers=(EFFORT_EXTERNALIZATION, SPECIFICITY, BINARY_COMMITMENT, ASK_MERCHANT),
+        levers=(EFFORT_EXTERNALIZATION, SPECIFICITY, BINARY_COMMITMENT, ASK_MERCHANT, RECIPROCITY),
         cta="binary_yes_no",
         urgency_floor=1,
         offer_of_work="send it across for your approval",
@@ -410,7 +410,7 @@ HOOKS: dict[str, str] = {
         "Searches for \"{trend.query}\" are up {trend.delta} year on year"
         "[[ in {city}]].",
     "category_seasonal":
-        "The {trg.season} window is turning[[ — {beat.note}]].",
+        "The {trg.season} window is turning[[: {beat.note}]].",
     "festival_upcoming":
         "{trg.festival} is {trg.days_until} days out[[ ({trg.date})]].",
     "local_news_event":

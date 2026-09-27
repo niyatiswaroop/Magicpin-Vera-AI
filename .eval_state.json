@@ -1,0 +1,16 @@
+{
+  "runs": [
+    {
+      "at": "2026-09-27T13:48:13",
+      "means": {
+        "specificity": 7.1,
+        "category_fit": 7.133333333333334,
+        "merchant_fit": 8.3,
+        "decision_quality": 6.633333333333334,
+        "engagement_compulsion": 6.2
+      },
+      "total": 35.36666666666667,
+      "n": 30
+    }
+  ]
+}
