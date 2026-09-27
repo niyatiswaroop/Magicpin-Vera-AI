@@ -47,6 +47,31 @@ def _now_iso() -> str:
 
 
 # ---------------------------------------------------------------------------
+# GET /  -- not part of the judge contract, which only calls /v1/*. It exists so
+# that a human opening the submitted URL sees a live service rather than a bare
+# 404, which reads as a broken deployment.
+# ---------------------------------------------------------------------------
+
+@app.get("/")
+async def index() -> dict[str, Any]:
+    return {
+        "service": "Vera — magicpin AI Challenge bot",
+        "status": "ok",
+        "uptime_seconds": int(time.time() - START),
+        "contexts_loaded": contexts.counts(),
+        "endpoints": {
+            "GET /v1/healthz": "liveness + context counts",
+            "GET /v1/metadata": "bot identity",
+            "POST /v1/context": "receive a context push (idempotent on scope+id+version)",
+            "POST /v1/tick": "periodic wake-up; may return proactive actions",
+            "POST /v1/reply": "receive a merchant/customer reply",
+            "POST /v1/teardown": "wipe all state",
+        },
+        "docs": "/docs",
+    }
+
+
+# ---------------------------------------------------------------------------
 # 2.4  GET /v1/healthz
 # ---------------------------------------------------------------------------
 
